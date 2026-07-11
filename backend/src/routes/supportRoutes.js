@@ -1,0 +1,10 @@
+const express = require("express");
+const auth = require("../controller/auth/authController");
+const support = require("../controller/support/supportController");
+const router = express.Router();
+const asyncHandler = (handler) => (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
+router.get("/agents", auth.verifyToken, asyncHandler(support.listAgents));
+router.post("/agents", auth.verifyToken, asyncHandler(support.createAgent));
+router.patch("/agents/:id/status", auth.verifyToken, asyncHandler(support.setAgentStatus));
+router.get("/tawk-identity", auth.verifyToken, asyncHandler(support.tawkIdentity));
+module.exports = router;

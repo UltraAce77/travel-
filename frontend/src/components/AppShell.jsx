@@ -8,6 +8,7 @@ import {
   Wallet as WalletIcon,
   Users,
   UserCog,
+  Headphones,
   Banknote,
   LogOut,
   Menu,
@@ -31,8 +32,10 @@ const NAV = {
     { to: "/admin/treks", label: "Treks", icon: Map },
     { to: "/admin/users", label: "Users", icon: Users },
     { to: "/admin/managers", label: "Managers", icon: UserCog },
+    { to: "/admin/support", label: "Support agents", icon: Headphones },
   ],
   manager: [{ to: "/manager", end: true, label: "Dashboard", icon: LayoutDashboard }],
+  customer_support: [{ to: "/support", end: true, label: "Support dashboard", icon: Headphones }],
 };
 
 export default function AppShell() {

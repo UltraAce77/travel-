@@ -62,12 +62,14 @@ const funds = require("./src/routes/fundsRoutes");
 const manager = require("./src/routes/managerRoutes");
 const user = require("./src/routes/userRoutes");
 const treks = require("./src/routes/treksRoutes");
+const support = require("./src/routes/supportRoutes");
 
 app.use("/", auth);
 app.use("/funds", funds);
 app.use("/manager", manager);
 app.use("/user", user);
 app.use("/treks", treks);
+app.use("/support", support);
 
 app.get("/api/health", async (req, res) => {
    try {
