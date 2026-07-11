@@ -4,7 +4,7 @@
     "description":  "travelleaders",
     "main":  "server.js",
     "scripts":  {
-                    "test":  "echo \"Error: no test specified\" \u0026\u0026 exit 1",
+                    "test":  "node --test",
                     "start":  "node server.js",
                     "dev":  "nodemon server.js",
                     "setupDB":  "node db/seed_mongo.js",
@@ -17,7 +17,7 @@
     "license":  "ISC",
     "dependencies":  {
                          "axios":  "^1.7.7",
-                         "bcrypt":  "^5.1.1",
+                         "bcrypt":  "^6.0.0",
                          "body-parser":  "^1.20.3",
                          "cookie-parser":  "^1.4.7",
                          "cors":  "^2.8.5",
