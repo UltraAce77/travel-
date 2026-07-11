@@ -61,7 +61,7 @@ export default function UserDashboard() {
       <section className="relative overflow-hidden rounded-[2rem] p-8 shadow-card sm:p-10">
         <TravelScene variant="coast" className="absolute inset-0" label="Ocean coastline travel scene" />
         <div className="absolute inset-0 bg-gradient-to-r from-sky-950/78 via-sky-950/28 to-transparent" />
-        <div className="relative max-w-xl text-white">
+        <div className="relative max-w-xl text-gray-950">
           <p className="text-sm font-700 uppercase tracking-[0.2em] text-sand-200">Elevate your travel journey</p>
           <h1 className="mt-3 font-display text-4xl font-700 leading-tight sm:text-5xl">
             Travel with care, explore with confidence.
