@@ -9,6 +9,7 @@ import {
   Users,
   UserCog,
   Banknote,
+  MessageSquare,
   LogOut,
   Menu,
   X,
@@ -31,6 +32,7 @@ const NAV = {
     { to: "/admin/treks", label: "Treks", icon: Map },
     { to: "/admin/users", label: "Users", icon: Users },
     { to: "/admin/managers", label: "Managers", icon: UserCog },
+    { to: "/admin/support", label: "Support", icon: MessageSquare },
   ],
   manager: [{ to: "/manager", end: true, label: "Dashboard", icon: LayoutDashboard }],
 };

@@ -20,6 +20,7 @@ import AdminFunds from "./pages/admin/Funds";
 import AdminTreks from "./pages/admin/Treks";
 import AdminUsers from "./pages/admin/Users";
 import AdminManagers from "./pages/admin/Managers";
+import AdminSupport from "./pages/admin/Support";
 
 import ManagerDashboard from "./pages/manager/Dashboard";
 
@@ -78,6 +79,7 @@ export default function App() {
         <Route path="treks" element={<AdminTreks />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="managers" element={<AdminManagers />} />
+        <Route path="support" element={<AdminSupport />} />
       </Route>
 
       {/* Manager */}

@@ -38,7 +38,7 @@ const allowedOrigins = [
 app.set("trust proxy", 1);
 
 // Middleware
-app.use(express.json()); // Parse JSON bodies
+app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } })); // Parse JSON + keep raw body (Tawk webhook signature)
 app.use(
    cors({
       origin(origin, callback) {
