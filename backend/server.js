@@ -25,7 +25,15 @@ const configuredOrigins = (process.env.FRONTEND_URL || process.env.CORS_ORIGIN |
    .split(",")
    .map((origin) => origin.trim().replace(/\/$/, ""))
    .filter(Boolean);
-const allowedOrigins = [...new Set([...configuredOrigins, "http://localhost:3000", "http://localhost:5173"])];
+const allowedOrigins = [
+   ...new Set([
+      ...configuredOrigins,
+      "https://travel-strom-shift.vercel.app",
+      "https://travel-git-main-strom-shift.vercel.app",
+      "http://localhost:3000",
+      "http://localhost:5173",
+   ]),
+];
 
 app.set("trust proxy", 1);
 
