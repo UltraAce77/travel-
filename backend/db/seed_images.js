@@ -1,0 +1,7 @@
+const axios = require("axios");
+require("dotenv").config();
+const Trek = require("../src/models/Trek");
+const { connectDatabase, closeDatabase } = require("../src/config/database");
+const KEYWORDS=["sanfrancisco","maldives","cappadocia","tokyo","banff","seychelles","alps","forest","plitvice","venice","iceland","bali","stonehenge","vermont","vancouver","zambezi","california","hallstatt","dubai","shanghai","london","manhattan","chicago","hongkong","valencia","shinjuku","london","newyork","manhattan","bigsur","manhattan","monumentvalley","hollywood","zion","timessquare","brooklyn","manhattan","manhattan","newyork","statueofliberty","broadway","borabora","matterhorn","hawaii","oregon","cliffs","amalfi","como","portland","scotland"];
+async function fetchBuf(url){const res=await axios.get(url,{responseType:"arraybuffer",timeout:20000,maxRedirects:5});const buf=Buffer.from(res.data);if(buf.length<2000)throw new Error("image too small");return buf;}
+(async()=>{await connectDatabase();const treks=await Trek.find().sort({createdAt:1});let ok=0;for(let i=0;i<treks.length;i++){try{treks[i].picture=await fetchBuf(`https://loremflickr.com/800/600/${KEYWORDS[i]||"travel"}`);await treks[i].save();ok++;}catch(e){console.warn(`Image skipped for ${treks[i].title}: ${e.message}`);}}console.log(`Updated ${ok}/${treks.length} MongoDB trek images`);})().catch(e=>{console.error("Image seed failed:",e.message);process.exitCode=1;}).finally(closeDatabase);

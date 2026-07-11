@@ -1,0 +1,1 @@
+module.exports = { appPort: Number(process.env.PORT || process.env.APP_PORT || 8081) };
