@@ -7,12 +7,18 @@ import { api, http, isOk } from "../../lib/api";
 import { money, cn } from "../../lib/utils";
 import { useToast } from "../../components/Toast";
 
-const GRADIENTS = [
-  "from-iris-600/40 to-ink-800",
-  "from-gold-600/40 to-ink-800",
-  "from-emerald-600/30 to-ink-800",
-  "from-sky-600/30 to-ink-800",
+const FALLBACK_IMAGES = [
+  "photo-1507525428034-b723cf961d3e",
+  "photo-1493976040374-85c8e12f0c0e",
+  "photo-1531366936337-7c912a4589a7",
+  "photo-1523906834658-6e24ef2386f9",
+  "photo-1501785888041-af3ef285b470",
+  "photo-1537996194471-e657df975ab4",
 ];
+
+const fallbackImage = (index) =>
+  `https://images.unsplash.com/${FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]}?auto=format&fit=crop&w=900&q=75`;
+
 
 export default function AdminTreks() {
   const toast = useToast();
@@ -98,16 +104,16 @@ export default function AdminTreks() {
         <EmptyState icon={MapPin} title="No treks yet" text="Add your first destination to the catalog." />
       ) : (
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {treks.map((t) => (
+          {treks.map((t, index) => (
             <div key={t.trekID} className="card overflow-hidden">
-              <div className={cn("relative h-24 bg-gradient-to-br", GRADIENTS[t.trekID % GRADIENTS.length])}>
-                {t.picture ? (
-                  <img src={`data:image/jpeg;base64,${t.picture}`} alt={t.title} className="h-full w-full object-cover" />
-                ) : (
-                  <div className="absolute inset-0 grid place-items-center">
-                    <MapPin className="h-6 w-6 text-white/40" />
-                  </div>
-                )}
+              <div className="relative h-32 overflow-hidden bg-ocean-100">
+                <img
+                  src={t.picture ? `data:image/jpeg;base64,${t.picture}` : fallbackImage(index)}
+                  alt={t.title}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-sky-950/35 to-transparent" />
               </div>
               <div className="p-4">
                 <h3 className="line-clamp-1 text-sm font-600 text-sky-950">{t.title}</h3>
