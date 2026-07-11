@@ -20,15 +20,12 @@ import AdminFunds from "./pages/admin/Funds";
 import AdminTreks from "./pages/admin/Treks";
 import AdminUsers from "./pages/admin/Users";
 import AdminManagers from "./pages/admin/Managers";
-import SupportAgents from "./pages/admin/SupportAgents";
-import SupportDashboard from "./pages/support/Dashboard";
 
 import ManagerDashboard from "./pages/manager/Dashboard";
 
 function homeFor(role) {
   if (role === "admin") return "/admin";
   if (role === "manager") return "/manager";
-  if (role === "customer_support") return "/support";
   return "/app";
 }
 
@@ -81,7 +78,6 @@ export default function App() {
         <Route path="treks" element={<AdminTreks />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="managers" element={<AdminManagers />} />
-        <Route path="support" element={<SupportAgents />} />
       </Route>
 
       {/* Manager */}
@@ -94,17 +90,6 @@ export default function App() {
         }
       >
         <Route index element={<ManagerDashboard />} />
-      </Route>
-
-      <Route
-        path="/support"
-        element={
-          <ProtectedRoute roles={["customer_support"]}>
-            <AppShell />
-          </ProtectedRoute>
-        }
-      >
-        <Route index element={<SupportDashboard />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

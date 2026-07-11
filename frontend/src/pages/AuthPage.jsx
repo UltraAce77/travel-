@@ -10,11 +10,6 @@ import { cn } from "../lib/utils";
 const IMG =
   "https://images.unsplash.com/photo-1510414842594-a61c69b5ae57?auto=format&fit=crop&w=1400&q=80";
 
-const DEMO = [
-  { label: "Admin", email: "admin@gmail.com", password: "admin123" },
-  { label: "Manager", email: "manager@gmail.com", password: "manager123" },
-  { label: "User", email: "user@gmail.com", password: "user123" },
-];
 
 function homeFor(role) {
   if (role === "admin") return "/admin";
@@ -66,10 +61,6 @@ export default function AuthPage() {
     }
   };
 
-  const quickFill = (d) => {
-    setLoginForm({ email: d.email, password: d.password });
-    setTab("login");
-  };
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
@@ -153,20 +144,7 @@ export default function AuthPage() {
               <button type="submit" disabled={busy} className="btn-primary w-full">
                 {busy ? <Spinner /> : <>Sign in <ArrowRight className="h-4 w-4" /></>}
               </button>
-
-              <div className="pt-2">
-                <p className="mb-2 text-center text-xs uppercase tracking-wider text-sky-900/45">
-                  Quick demo login
-                </p>
-                <div className="grid grid-cols-3 gap-2">
-                  {DEMO.map((d) => (
-                    <button key={d.label} type="button" onClick={() => quickFill(d)} className="btn-ghost px-2 py-2 text-xs">
-                      {d.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </form>
+</form>
           ) : (
             <form onSubmit={onRegister} className="mt-7 space-y-4 animate-fade-up">
               <div>
@@ -184,29 +162,13 @@ export default function AuthPage() {
                 <input id="reg-pass" type="password" required className="input" placeholder="••••••••"
                   value={regForm.password} onChange={(e) => setRegForm({ ...regForm, password: e.target.value })} />
               </div>
-              <div>
-                <label className="label">Account type</label>
-                <div className="grid grid-cols-2 gap-2">
-                  {["user", "manager"].map((r) => (
-                    <button key={r} type="button" onClick={() => setRegForm({ ...regForm, role: r })}
-                      className={cn(
-                        "cursor-pointer rounded-xl border px-3 py-2.5 text-sm font-600 capitalize transition",
-                        regForm.role === r
-                          ? "border-ocean-500 bg-ocean-50 text-ocean-700"
-                          : "border-ocean-200 bg-white text-sky-900/60 hover:text-sky-900"
-                      )}>
-                      {r}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-3">
+<div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="label" htmlFor="reg-ref">
                     Referral code
                   </label>
                   <input id="reg-ref" required className="input"
-                    placeholder={regForm.role === "manager" ? "ADMIN100" : "MANAGER100"}
+                    placeholder="Enter referral code"
                     value={regForm.referralCode} onChange={(e) => setRegForm({ ...regForm, referralCode: e.target.value })} />
                 </div>
                 <div>

@@ -46,8 +46,8 @@ export default function Footer() {
           ))}
         </div>
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-ocean-100 pt-6 text-xs text-sky-900/50 sm:flex-row">
-          <p>© {new Date().getFullYear()} Travel Leaders. Demo environment — sample data only.</p>
-          <p>Built for a security-awareness expo.</p>
+          <p>© {new Date().getFullYear()} Travel Leaders. All rights reserved.</p>
+          <p>Travel membership and support platform.</p>
         </div>
       </div>
     </footer>

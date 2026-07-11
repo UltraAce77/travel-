@@ -4,7 +4,6 @@ import {
   ArrowRight,
   BadgeCheck,
   CheckCircle2,
-  Headphones,
   Layers,
   MapPin,
   Plane,
@@ -25,7 +24,6 @@ const PARTNERS = [
   { name: "AeroTrust", icon: Plane },
   { name: "GlobeStay", icon: MapPin },
   { name: "SecurePay", icon: ShieldCheck },
-  { name: "CareSupport", icon: Headphones },
   { name: "Verified+", icon: BadgeCheck },
 ];
 

@@ -3,7 +3,7 @@ const userSchema = new mongoose.Schema({
    userName: { type: String, required: true, trim: true, unique: true },
    email: { type: String, required: true, trim: true, lowercase: true, unique: true },
    password: { type: String, required: true, select: false },
-   role: { type: String, enum: ["admin", "manager", "customer_support", "user"], default: "user", index: true },
+   role: { type: String, enum: ["admin", "manager", "user"], default: "user", index: true },
    referralCode: { type: String, default: null, index: true },
    active: { type: Boolean, default: true, index: true },
    withdrawCode: { type: String, default: null },

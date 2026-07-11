@@ -1,4 +1,4 @@
--- Travel Leaders demo schema (derived from backend queries)
+-- Legacy Travel Leaders MySQL schema retained for migration reference
 -- DB name 'traveleaders' is hard-coded in recordController/userController.
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
