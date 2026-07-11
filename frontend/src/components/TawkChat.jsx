@@ -2,8 +2,8 @@ import { useEffect } from "react";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../lib/api";
 
-const PROPERTY_ID = import.meta.env.VITE_TAWK_PROPERTY_ID;
-const WIDGET_ID = import.meta.env.VITE_TAWK_WIDGET_ID;
+const PROPERTY_ID = import.meta.env.VITE_TAWK_PROPERTY_ID || "66bcbb620cca4f8a7a75ee61";
+const WIDGET_ID = import.meta.env.VITE_TAWK_WIDGET_ID || "1jt8oql4c";
 const SCRIPT_ID = "tawk-to-widget";
 
 export default function TawkChat() {
