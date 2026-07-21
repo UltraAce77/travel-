@@ -19,6 +19,7 @@ import TravelScene from "../../components/TravelScene";
 import { useUserData } from "../../hooks/useUserData";
 import { api } from "../../lib/api";
 import { money } from "../../lib/utils";
+import { trekImage, fallbackOnImageError } from "../../lib/trekImage";
 
 const PARTNERS = [
   { name: "AeroTrust", icon: Plane },
@@ -26,8 +27,6 @@ const PARTNERS = [
   { name: "SecurePay", icon: ShieldCheck },
   { name: "Verified+", icon: BadgeCheck },
 ];
-
-const SCENES = ["coast", "island", "sunset", "alpine"];
 
 export default function UserDashboard() {
   const { record, treks, loading } = useUserData();
@@ -121,11 +120,12 @@ export default function UserDashboard() {
             {destinations.map((d, i) => (
               <div key={d.trekID} className="w-60 shrink-0 overflow-hidden rounded-3xl bg-white shadow-card">
                 <div className="relative h-36">
-                  {d.picture ? (
-                    <img src={`data:image/jpeg;base64,${d.picture}`} alt={d.title} className="h-full w-full object-cover" />
-                  ) : (
-                    <TravelScene variant={SCENES[i % SCENES.length]} label={d.title} className="absolute inset-0" />
-                  )}
+                  <img
+                    src={trekImage(d, i)}
+                    onError={fallbackOnImageError(i)}
+                    alt={d.title}
+                    className="h-full w-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-sky-950/65 to-transparent" />
                 </div>
                 <div className="p-4">

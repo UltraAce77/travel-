@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Lock, CheckCircle2, Coins, Sparkles, RefreshCw } from "lucide-react";
+import { Lock, CheckCircle2, Coins, Sparkles, RefreshCw, Star } from "lucide-react";
 import Spinner from "../../components/ui/Spinner";
 import Skeleton from "../../components/ui/Skeleton";
 
@@ -8,6 +8,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../components/Toast";
 import { api, isOk } from "../../lib/api";
 import { money, cn } from "../../lib/utils";
+import { trekImage, fallbackOnImageError } from "../../lib/trekImage";
 
 const GRADIENTS = [
   "from-iris-600/40 to-ink-800",
@@ -16,31 +17,19 @@ const GRADIENTS = [
   "from-sky-600/30 to-ink-800",
   "from-rose-600/30 to-ink-800",
 ];
-const FALLBACK_IMAGES = [
-  "photo-1500530855697-b586d89ba3ee",
-  "photo-1469854523086-cc02fe5d8800",
-  "photo-1501785888041-af3ef285b470",
-  "photo-1470770841072-f978cf4d019e",
-  "photo-1527631746610-bca00a040d60",
-  "photo-1488646953014-85cb44e25828",
-];
-const fallbackImage = (index) => `https://images.unsplash.com/${FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]}?auto=format&fit=crop&w=1200&q=80`;
 
 function TrekCard({ trek, index, onComplete, busy, locked }) {
   const done = trek.status === "completed";
+  const [rating, setRating] = useState(0);
+  const [description, setDescription] = useState("");
   const g = GRADIENTS[index % GRADIENTS.length];
   return (
     <div className={cn("card overflow-hidden transition", done && "opacity-60")}>
       <div className={cn("relative h-28 bg-gradient-to-br", g)}>
-        {trek.picture ? (
-          <img
-            src={`data:image/jpeg;base64,${trek.picture}`}
-            alt={trek.title}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <img src={fallbackImage(index)} alt={trek.title} className="h-full w-full object-cover" />
-        )}
+        <img
+          src={trekImage(trek, index)} onError={fallbackOnImageError(index)}
+          alt={trek.title} className="h-full w-full object-cover"
+        />
         <span
           className={cn(
             "chip absolute right-2 top-2 backdrop-blur",
@@ -60,9 +49,40 @@ function TrekCard({ trek, index, onComplete, busy, locked }) {
             <Coins className="h-3.5 w-3.5" /> +{money(trek.commission)}
           </span>
         </div>
+        <div className="mt-5">
+          <p className="text-xs font-600 text-sky-900/70">Rate this trek <span className="text-rose-500">required</span></p>
+          <div className="mt-2 flex gap-1" role="radiogroup" aria-label="Trek rating">
+            {[1, 2, 3, 4, 5].map((value) => (
+              <button
+                key={value}
+                type="button"
+                role="radio"
+                aria-checked={rating === value}
+                aria-label={`${value} star${value === 1 ? "" : "s"}`}
+                onClick={() => setRating(value)}
+                className="cursor-pointer rounded-lg p-1 transition hover:bg-sand-50"
+              >
+                <Star className={cn("h-6 w-6 text-sand-400", rating >= value && "fill-sand-400")} />
+              </button>
+            ))}
+          </div>
+        </div>
+        <div className="mt-4">
+          <label className="text-xs font-600 text-sky-900/70" htmlFor={`trek-note-${trek.assignmentID}`}>Description <span className="font-normal text-sky-900/45">optional</span></label>
+          <textarea
+            id={`trek-note-${trek.assignmentID}`}
+            maxLength={1000}
+            rows={3}
+            className="input mt-2 resize-none"
+            placeholder="Share anything about this trek..."
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+        </div>
         <button
-          disabled={done || busy || locked}
-          onClick={() => onComplete(trek)}
+          type="button"
+          disabled={done || busy || locked || rating === 0}
+          onClick={() => onComplete(trek, { rating, description })}
           className={cn("mt-4 w-full", done ? "btn-ghost" : "btn-iris")}
         >
           {busy ? (
@@ -76,7 +96,7 @@ function TrekCard({ trek, index, onComplete, busy, locked }) {
               <Lock className="h-3.5 w-3.5" /> Locked
             </>
           ) : (
-            "Complete trek"
+            rating ? "Complete trek" : "Choose a rating"
           )}
         </button>
       </div>
@@ -111,7 +131,7 @@ export default function UserTreks() {
     }
   };
 
-  const complete = async (trek) => {
+  const complete = async (trek, review) => {
     if (locked) {
       toast.error("Your balance is depleted — deposit funds to continue");
       return;
@@ -120,6 +140,8 @@ export default function UserTreks() {
     const res = await api("post", "/treks/approveTrek", {
       id: user.id,
       assignmentID: trek.assignmentID,
+      rating: review.rating,
+      description: review.description,
     });
     setBusyId(null);
     if (isOk(res)) {

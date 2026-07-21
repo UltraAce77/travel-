@@ -10,6 +10,7 @@ const app = express();
 // Config
 const { connectDatabase, testDBConnection, closeDatabase } = require("./src/config/database");
 const config = require("./src/config/index");
+const { syncTrekCatalog } = require("./src/services/trekCatalogService");
 
 const requiredEnvironmentVariables = ["MONGODB_URI"];
 const missingEnvironmentVariables = requiredEnvironmentVariables.filter((name) => !process.env[name]);
@@ -95,6 +96,7 @@ const startServer = async (retryCount = 0) => {
 
    try {
       await connectDatabase();
+      await syncTrekCatalog();
 
       // Start server after successful DB connection
       const server = app.listen(config.appPort, "0.0.0.0", () => {

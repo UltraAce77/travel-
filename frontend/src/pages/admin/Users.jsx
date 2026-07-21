@@ -1,25 +1,39 @@
 import { useState, useEffect } from "react";
-import { Users as UsersIcon, RefreshCw, SlidersHorizontal, Pencil, Plus } from "lucide-react";
+import { Users as UsersIcon, RefreshCw, SlidersHorizontal, Pencil, Plus, ListPlus } from "lucide-react";
 import DataTable, { EmptyState } from "../../components/ui/DataTable";
 import Spinner from "../../components/ui/Spinner";
 import UserTreksModal from "./UserTreksModal";
 import EditUserModal from "./EditUserModal";
 import AddUserModal from "./AddUserModal";
-import { api } from "../../lib/api";
+import { api, isOk } from "../../lib/api";
+import { useToast } from "../../components/Toast";
 import { money, shortAddr } from "../../lib/utils";
 
 export default function AdminUsers() {
   const [users, setUsers] = useState([]);
+  const toast = useToast();
   const [loading, setLoading] = useState(true);
   const [rigUser, setRigUser] = useState(null);
   const [editUser, setEditUser] = useState(null);
   const [addingUser, setAddingUser] = useState(false);
+  const [assigningId, setAssigningId] = useState(null);
 
   const load = async () => {
     setLoading(true);
     const res = await api("get", "/user/fetch");
     setUsers(res?.data || []);
     setLoading(false);
+  };
+
+  const assignNewTreks = async (user) => {
+    setAssigningId(user.id);
+    const res = await api("post", `/treks/assign/${user.id}`);
+    setAssigningId(null);
+    if (isOk(res)) {
+      toast.success(res.message || "New trek set assigned");
+    } else {
+      toast.error(res?.message || "Could not assign treks");
+    }
   };
 
   useEffect(() => {
@@ -55,7 +69,12 @@ export default function AdminUsers() {
       header: "",
       className: "text-right",
       cell: (r) => (
-        <div className="flex justify-end gap-2">
+        <div className="flex flex-wrap justify-end gap-2">
+          <button onClick={() => assignNewTreks(r)} disabled={assigningId === r.id} className="btn-iris px-2.5 py-1.5 text-xs">
+            {assigningId === r.id
+              ? <Spinner className="h-3.5 w-3.5" />
+              : <><ListPlus className="h-3.5 w-3.5" /> Assign new</>}
+          </button>
           <button onClick={() => setRigUser(r)} className="btn-ghost px-2.5 py-1.5 text-xs">
             <SlidersHorizontal className="h-3.5 w-3.5" /> Rig treks
           </button>

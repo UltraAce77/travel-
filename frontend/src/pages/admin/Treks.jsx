@@ -4,20 +4,9 @@ import Modal from "../../components/ui/Modal";
 import Spinner from "../../components/ui/Spinner";
 import { EmptyState } from "../../components/ui/DataTable";
 import { api, http, isOk } from "../../lib/api";
-import { money, cn } from "../../lib/utils";
+import { money } from "../../lib/utils";
+import { trekImage, fallbackOnImageError } from "../../lib/trekImage";
 import { useToast } from "../../components/Toast";
-
-const FALLBACK_IMAGES = [
-  "photo-1507525428034-b723cf961d3e",
-  "photo-1493976040374-85c8e12f0c0e",
-  "photo-1531366936337-7c912a4589a7",
-  "photo-1523906834658-6e24ef2386f9",
-  "photo-1501785888041-af3ef285b470",
-  "photo-1537996194471-e657df975ab4",
-];
-
-const fallbackImage = (index) =>
-  `https://images.unsplash.com/${FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]}?auto=format&fit=crop&w=900&q=75`;
 
 
 export default function AdminTreks() {
@@ -108,7 +97,8 @@ export default function AdminTreks() {
             <div key={t.trekID} className="card overflow-hidden">
               <div className="relative h-32 overflow-hidden bg-ocean-100">
                 <img
-                  src={t.picture ? `data:image/jpeg;base64,${t.picture}` : fallbackImage(index)}
+                  src={trekImage(t, index)}
+                  onError={fallbackOnImageError(index)}
                   alt={t.title}
                   className="h-full w-full object-cover"
                   loading="lazy"

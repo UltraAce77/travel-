@@ -66,7 +66,7 @@ export default function UserTreksModal({ user, open, onClose }) {
       ) : treks.length === 0 ? (
         <p className="py-8 text-center text-sm text-sky-900/50">No treks assigned to this user.</p>
       ) : (
-        <div className="max-h-[55vh] overflow-y-auto pr-1">
+        <div className="max-h-[55vh] overflow-x-auto overflow-y-auto pr-1">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs uppercase tracking-wider text-sky-900/50">
@@ -74,12 +74,14 @@ export default function UserTreksModal({ user, open, onClose }) {
                 <th className="px-2 py-2 font-medium">Price</th>
                 <th className="px-2 py-2 font-medium">Commission</th>
                 <th className="px-2 py-2 font-medium">Status</th>
+                <th className="px-2 py-2 font-medium">Rating</th>
+                <th className="px-2 py-2 font-medium">Description</th>
                 <th className="px-2 py-2" />
               </tr>
             </thead>
             <tbody>
               {treks.map((t) => {
-                const editable = t.status === "pending" && t.assignmentID !== firstPendingId;
+                const editable = !t.archived && t.status === "pending" && t.assignmentID !== firstPendingId;
                 const previewComm = +(parseFloat(edit[t.assignmentID] || 0) * 0.2).toFixed(2);
                 return (
                   <tr key={t.assignmentID} className="border-t border-line/60">
@@ -111,6 +113,12 @@ export default function UserTreksModal({ user, open, onClose }) {
                       >
                         {t.status}
                       </span>
+                    </td>
+                    <td className="px-2 py-2 font-600 text-sand-600">
+                      {t.rating ? `${t.rating}/5` : <span className="text-sky-900/30">Not rated</span>}
+                    </td>
+                    <td className="max-w-52 px-2 py-2 text-xs text-sky-900/60">
+                      <span className="line-clamp-2">{t.description || "No description"}</span>
                     </td>
                     <td className="px-2 py-2 text-right">
                       {editable ? (
