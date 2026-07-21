@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MapPin, Lock, CheckCircle2, Coins, Sparkles, RefreshCw } from "lucide-react";
+import { Lock, CheckCircle2, Coins, Sparkles, RefreshCw } from "lucide-react";
 import Spinner from "../../components/ui/Spinner";
 import Skeleton from "../../components/ui/Skeleton";
 
@@ -16,10 +16,19 @@ const GRADIENTS = [
   "from-sky-600/30 to-ink-800",
   "from-rose-600/30 to-ink-800",
 ];
+const FALLBACK_IMAGES = [
+  "photo-1500530855697-b586d89ba3ee",
+  "photo-1469854523086-cc02fe5d8800",
+  "photo-1501785888041-af3ef285b470",
+  "photo-1470770841072-f978cf4d019e",
+  "photo-1527631746610-bca00a040d60",
+  "photo-1488646953014-85cb44e25828",
+];
+const fallbackImage = (index) => `https://images.unsplash.com/${FALLBACK_IMAGES[index % FALLBACK_IMAGES.length]}?auto=format&fit=crop&w=1200&q=80`;
 
-function TrekCard({ trek, onComplete, busy, locked }) {
+function TrekCard({ trek, index, onComplete, busy, locked }) {
   const done = trek.status === "completed";
-  const g = GRADIENTS[trek.trekID % GRADIENTS.length];
+  const g = GRADIENTS[index % GRADIENTS.length];
   return (
     <div className={cn("card overflow-hidden transition", done && "opacity-60")}>
       <div className={cn("relative h-28 bg-gradient-to-br", g)}>
@@ -30,9 +39,7 @@ function TrekCard({ trek, onComplete, busy, locked }) {
             className="h-full w-full object-cover"
           />
         ) : (
-          <div className="absolute inset-0 grid place-items-center">
-            <MapPin className="h-7 w-7 text-white/40" />
-          </div>
+          <img src={fallbackImage(index)} alt={trek.title} className="h-full w-full object-cover" />
         )}
         <span
           className={cn(
@@ -89,6 +96,7 @@ export default function UserTreks() {
   const locked = balance <= 0;
   const total = treks?.length || 0;
   const done = treks?.filter((t) => t.status === "completed").length || 0;
+  const currentTrek = treks?.find((trek) => trek.status === "pending") || null;
   const pct = total ? Math.round((done / total) * 100) : 0;
 
   const startSet = async () => {
@@ -112,7 +120,6 @@ export default function UserTreks() {
     const res = await api("post", "/treks/approveTrek", {
       id: user.id,
       assignmentID: trek.assignmentID,
-      commission: trek.commission,
     });
     setBusyId(null);
     if (isOk(res)) {
@@ -210,16 +217,17 @@ export default function UserTreks() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-        {treks.map((t) => (
+      <div className="mx-auto grid max-w-md gap-4">
+        {currentTrek && (
           <TrekCard
-            key={t.assignmentID}
-            trek={t}
+            key={currentTrek.assignmentID}
+            trek={currentTrek}
+            index={done}
             onComplete={complete}
-            busy={busyId === t.assignmentID}
+            busy={busyId === currentTrek.assignmentID}
             locked={locked}
           />
-        ))}
+        )}
       </div>
     </div>
   );

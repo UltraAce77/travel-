@@ -18,24 +18,32 @@ http.interceptors.request.use((config) => {
  * Never throws — network/HTTP errors are normalized into the same shape.
  */
 export async function api(method, url, payload, config = {}) {
-  try {
-    const m = method.toLowerCase();
-    const res = await http.request({
-      method: m,
-      url,
-      ...(m === "get" ? { params: payload } : { data: payload }),
-      ...config,
-    });
-    return res.data;
-  } catch (e) {
-    return (
-      e.response?.data || {
-        data: null,
-        message: e.message || "Network error",
-        status: e.response?.status || 500,
-        type: "error",
+  const { retries = 0, retryDelay = 1200, ...requestConfig } = config;
+  const m = method.toLowerCase();
+
+  for (let attempt = 0; attempt <= retries; attempt += 1) {
+    try {
+      const res = await http.request({
+        method: m,
+        url,
+        ...(m === "get" ? { params: payload } : { data: payload }),
+        ...requestConfig,
+      });
+      return res.data;
+    } catch (e) {
+      const status = e.response?.status;
+      const retryable = !status || [408, 429, 500, 502, 503, 504].includes(status);
+      if (attempt < retries && retryable) {
+        await new Promise((resolve) => setTimeout(resolve, retryDelay));
+        continue;
       }
-    );
+      return e.response?.data || {
+        data: null,
+        message: e.code === "ECONNABORTED" ? "The server took too long to respond. Please try again." : e.message || "Network error",
+        status: status || 500,
+        type: "error",
+      };
+    }
   }
 }
 

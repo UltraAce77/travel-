@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowDownToLine, Info } from "lucide-react";
+import { ArrowDownToLine, Info, MessageCircle } from "lucide-react";
 import Spinner from "../../components/ui/Spinner";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../components/Toast";
@@ -13,6 +13,7 @@ export default function Deposit() {
   const toast = useToast();
   const [amount, setAmount] = useState("");
   const [busy, setBusy] = useState(false);
+  const [submittedAmount, setSubmittedAmount] = useState(null);
 
   const submit = async (e) => {
     e.preventDefault();
@@ -23,10 +24,19 @@ export default function Deposit() {
     setBusy(false);
     if (isOk(res)) {
       toast.success("Deposit submitted — pending admin approval");
+      setSubmittedAmount(value);
       setAmount("");
     } else {
       toast.error(res?.message || "Deposit failed");
     }
+  };
+
+  const openLiveChat = () => {
+    if (window.Tawk_API?.maximize) {
+      window.Tawk_API.maximize();
+      return;
+    }
+    toast.error("Live chat is still loading. Please wait a moment and try again.");
   };
 
   return (
@@ -75,11 +85,20 @@ export default function Deposit() {
         <button type="submit" disabled={busy} className="btn-primary w-full">
           {busy ? <Spinner /> : <><ArrowDownToLine className="h-4 w-4" /> Submit deposit</>}
         </button>
+        {submittedAmount && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-900">
+            <p className="font-600">Deposit request for {money(submittedAmount)} submitted.</p>
+            <p className="mt-1 text-emerald-800/80">Now confirm your deposit with customer support in live chat.</p>
+            <button type="button" onClick={openLiveChat} className="btn-ghost mt-3 border-emerald-300 bg-white">
+              <MessageCircle className="h-4 w-4" /> Confirm in live chat
+            </button>
+          </div>
+        )}
 
         <div className="flex items-start gap-2.5 rounded-xl border border-iris-500/20 bg-ocean-50 p-3 text-xs text-sky-900/60">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-ocean-600" />
-          Deposits are reviewed by an administrator before they're credited to your balance. You'll
-          see your balance update once approved.
+          After submitting, confirm the deposit in live chat. An administrator will review it and
+          your balance will update after approval.
         </div>
       </form>
     </div>

@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { Users as UsersIcon, RefreshCw, SlidersHorizontal, Pencil } from "lucide-react";
+import { Users as UsersIcon, RefreshCw, SlidersHorizontal, Pencil, Plus } from "lucide-react";
 import DataTable, { EmptyState } from "../../components/ui/DataTable";
 import Spinner from "../../components/ui/Spinner";
 import UserTreksModal from "./UserTreksModal";
 import EditUserModal from "./EditUserModal";
+import AddUserModal from "./AddUserModal";
 import { api } from "../../lib/api";
 import { money, shortAddr } from "../../lib/utils";
 
@@ -12,6 +13,7 @@ export default function AdminUsers() {
   const [loading, setLoading] = useState(true);
   const [rigUser, setRigUser] = useState(null);
   const [editUser, setEditUser] = useState(null);
+  const [addingUser, setAddingUser] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -72,9 +74,14 @@ export default function AdminUsers() {
           <h1 className="font-display text-2xl font-700 text-sky-950">Users</h1>
           <p className="text-sm text-sky-900/60">{users.length} registered users.</p>
         </div>
-        <button onClick={load} className="btn-ghost">
-          <RefreshCw className="h-4 w-4" /> Refresh
-        </button>
+        <div className="flex gap-2">
+          <button onClick={load} className="btn-ghost">
+            <RefreshCw className="h-4 w-4" /> Refresh
+          </button>
+          <button onClick={() => setAddingUser(true)} className="btn-primary">
+            <Plus className="h-4 w-4" /> Add user
+          </button>
+        </div>
       </div>
 
       {loading ? (
@@ -86,6 +93,7 @@ export default function AdminUsers() {
       )}
 
       <UserTreksModal user={rigUser} open={!!rigUser} onClose={() => setRigUser(null)} />
+      <AddUserModal open={addingUser} onClose={() => setAddingUser(false)} onDone={load} />
       <EditUserModal user={editUser} open={!!editUser} onClose={() => setEditUser(null)} onDone={load} />
     </div>
   );

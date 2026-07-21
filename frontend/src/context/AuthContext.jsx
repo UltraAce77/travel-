@@ -24,7 +24,7 @@ export function AuthProvider({ children }) {
 
   const login = useCallback(
     async (email, password) => {
-      const res = await api("post", "/login", { email, password });
+      const res = await api("post", "/login", { email, password }, { timeout: 60000, retries: 1 });
       if (res?.data?.token) {
         persist(res.data.token, res.data.user);
         return { ok: true, user: res.data.user };
