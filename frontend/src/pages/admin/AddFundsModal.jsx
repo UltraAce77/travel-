@@ -24,7 +24,7 @@ export default function AddFundsModal({ open, onClose, onDone }) {
     if (!userID) return toast.error("Select a user");
     if (!amount || Number(amount) <= 0) return toast.error("Enter an amount");
     setBusy(true);
-    const res = await api("post", "/funds/add", { userID: Number(userID), amount: Number(amount) });
+    const res = await api("post", "/funds/add", { userID, amount: Number(amount) });
     setBusy(false);
     if (isOk(res)) {
       toast.success("Funds added (pending approval)");
@@ -61,6 +61,7 @@ export default function AddFundsModal({ open, onClose, onDone }) {
           <input
             id="af-amt"
             type="number"
+            min="0.01"
             step="any"
             className="input"
             placeholder="0.00"
