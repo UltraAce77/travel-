@@ -60,9 +60,19 @@ function TrekCard({ trek, index, onComplete, busy, locked }) {
                 aria-checked={rating === value}
                 aria-label={`${value} star${value === 1 ? "" : "s"}`}
                 onClick={() => setRating(value)}
-                className="cursor-pointer rounded-lg p-1 transition hover:bg-sand-50"
+                className={cn(
+                  "cursor-pointer rounded-lg p-1 transition duration-200 hover:bg-yellow-50",
+                  rating >= value && "scale-110 bg-yellow-50"
+                )}
               >
-                <Star className={cn("h-6 w-6 text-sand-400", rating >= value && "fill-sand-400")} />
+                <Star
+                  className={cn(
+                    "h-7 w-7 transition-all duration-200",
+                    rating >= value
+                      ? "fill-yellow-400 text-yellow-400 drop-shadow-[0_0_7px_rgba(250,204,21,0.95)]"
+                      : "fill-transparent text-slate-300"
+                  )}
+                />
               </button>
             ))}
           </div>
@@ -145,7 +155,11 @@ export default function UserTreks() {
     });
     setBusyId(null);
     if (isOk(res)) {
-      toast.success(`+${money(trek.commission)} commission earned`);
+      if (res?.data?.negativeTicket) {
+        toast.error(`${res.message} Current balance: ${money(res.data.balance)}`);
+      } else {
+        toast.success(`+${money(trek.commission)} commission earned`);
+      }
       reload();
     } else {
       toast.error(res?.message || "Could not complete this trek");

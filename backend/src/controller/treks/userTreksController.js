@@ -51,6 +51,22 @@ const approveTrek = async (req, res) => {
       return res.status(409).json(new Response(null, "Complete the current trek before continuing", 409, "error"));
     }
 
+    const existingUser = await User.findById(id);
+    if (!existingUser) return res.status(404).json(new Response(null, "User not found", 404, "error"));
+    const currentBalance = Number(existingUser.record?.totalBalance || 0);
+    if (currentBalance <= 0) {
+      return res.status(409).json(
+        new Response(
+          { balance: currentBalance },
+          "Your balance is negative. Deposit funds before continuing.",
+          409,
+          "error"
+        )
+      );
+    }
+
+    const credit = completionCredit(current.commission, current.price, currentBalance);
+
     const item = await Assignment.findOneAndUpdate(
       { _id: current._id, userId: id, archived: { $ne: true }, status: "pending" },
       { $set: { status: "completed", rating, description } },
@@ -58,9 +74,7 @@ const approveTrek = async (req, res) => {
     );
     if (!item) return res.status(409).json(new Response(null, "This trek has already been completed", 409, "error"));
 
-    const credit = completionCredit(item.commission);
     const user = await User.findByIdAndUpdate(id, credit.update, { new: true });
-    if (!user) return res.status(404).json(new Response(null, "User not found", 404, "error"));
 
     const next = await Assignment.findOne({ userId: id, archived: { $ne: true }, status: "pending" })
       .sort(assignmentOrder)
@@ -70,7 +84,22 @@ const approveTrek = async (req, res) => {
       await Assignment.updateMany({ userId: id, archived: { $ne: true } }, { $set: { archived: true } });
     }
 
-    return res.json(new Response({ balance: user.record.totalBalance, earned: credit.earned, next: next ? assignment(next) : null }, "Trek completed.", 200, "success"));
+    const message = credit.negativeTicket
+      ? "Negative ticket applied. Deposit funds before continuing."
+      : "Trek completed.";
+    return res.json(
+      new Response(
+        {
+          balance: user.record.totalBalance,
+          earned: credit.earned,
+          negativeTicket: credit.negativeTicket,
+          next: next ? assignment(next) : null,
+        },
+        message,
+        200,
+        "success"
+      )
+    );
   } catch (error) {
     console.error("Error approving treks:", error.message);
     return res.status(500).json(new Response(null, "Error approving trek.", 500, "error"));

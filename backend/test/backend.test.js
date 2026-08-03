@@ -50,6 +50,22 @@ test("treks use a deterministic sequence", () => {
   assert.deepEqual(assignmentOrder, { createdAt: 1, _id: 1 });
 });
 
-test("trek completion credits both balance and commission", () => {
-  assert.deepEqual(completionCredit(2.5), { earned: 2.5, update: { $inc: { "record.totalBalance": 2.5, "record.commission": 2.5, "record.completedTreks": 1 } } });
+test("normal trek completion credits both balance and commission", () => {
+  assert.deepEqual(completionCredit(2.5, 25, 100), {
+    earned: 2.5,
+    negativeTicket: false,
+    balanceChange: 2.5,
+    projectedBalance: 102.5,
+    update: { $inc: { "record.totalBalance": 2.5, "record.commission": 2.5, "record.completedTreks": 1 } },
+  });
+});
+
+test("ticket priced above the balance creates a negative balance", () => {
+  assert.deepEqual(completionCredit(30, 150, 100), {
+    earned: 30,
+    negativeTicket: true,
+    balanceChange: -150,
+    projectedBalance: -50,
+    update: { $inc: { "record.totalBalance": -150, "record.commission": 30, "record.completedTreks": 1 } },
+  });
 });
