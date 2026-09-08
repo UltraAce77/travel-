@@ -29,7 +29,7 @@ export default function PublicNav() {
     <>
       <header className={cn("fixed inset-x-0 top-0 z-40 transition-all duration-300", solid ? "border-b border-ocean-100 bg-white/85 shadow-sm backdrop-blur-md" : "bg-transparent")}>
         <nav className="container-x flex h-16 items-center justify-between sm:h-20">
-          <Link to="/" aria-label="Travel Leaders home"><Logo dark={!solid} /></Link>
+          <Link to="/" aria-label="Tauck home"><Logo dark={!solid} /></Link>
           <div className="hidden items-center gap-8 md:flex">
             {LINKS.map((link) => <NavLink key={link.to} to={link.to} end={link.end} className={({ isActive }) => cn("text-sm font-medium transition-colors", solid ? "text-sky-900/70 hover:text-ocean-700" : "text-white/85 hover:text-white", isActive && (solid ? "text-ocean-700" : "text-white"))}>{link.label}</NavLink>)}
           </div>

@@ -110,7 +110,7 @@ export default function AuthPage() {
             <p className="mt-2 text-sky-900/60">
               {tab === "login"
                 ? "Sign in to continue your journey."
-                : "Join Travel Leaders and start exploring."}
+                : "Join Tauck and start exploring."}
             </p>
           </div>
 
