@@ -50,7 +50,7 @@ export default function About() {
           <div>
             <span className="eyebrow">Who we are</span>
             <h2 className="mt-5 font-display text-4xl font-700 leading-tight text-sky-950 sm:text-[2.75rem]">
-              This Tauck presentation imagines how exploring the world could be{" "}
+              This Trafalgar presentation imagines how exploring the world could be{" "}
               <span className="gradient-text">beautiful, effortless, and rewarding</span>.
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-sky-900/65">

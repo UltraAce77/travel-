@@ -46,7 +46,7 @@ export default function Footer() {
           ))}
         </div>
         <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-ocean-100 pt-6 text-xs text-sky-900/50 sm:flex-row">
-          <p>© 2026 Tauck. All rights reserved. {new Date().getFullYear()}</p>
+          <p>© 2026 Trafalgar. All rights reserved. {new Date().getFullYear()}</p>
           <p>Travel membership and support platform.</p>
         </div>
       </div>

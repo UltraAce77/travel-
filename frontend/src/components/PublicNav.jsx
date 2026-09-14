@@ -7,7 +7,7 @@ export default function PublicNav() {
   return (
     <header className="fixed left-0 right-0 top-0 z-40 px-4 pt-4">
       <div className="mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/70 bg-white/82 px-4 py-3 shadow-card backdrop-blur-xl sm:px-5">
-        <Link to="/" aria-label="Tauck home">
+        <Link to="/" aria-label="Trafalgar home">
           <Logo />
         </Link>
         <nav className="hidden items-center gap-2 md:flex">
