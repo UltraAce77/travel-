@@ -1,3 +1,3 @@
 {
-  "rewrites": [{ "source": "/(.*)", "destination": "/api/maintenance" }]
+  "routes": [{ "src": "/.*", "dest": "/api/maintenance" }]
 }
